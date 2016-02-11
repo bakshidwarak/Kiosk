@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+     		<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="css/bootstrap.min.css" >
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css" >
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+	    <link href="css/carousel.css" rel="stylesheet">
+		
+		
+		
+		
+		
+		<!-- Latest compiled and minified JavaScript -->
+		
+		
+          <title>Hello World</title>
+		
+	    
+		<style type='text/css'>
+		.vcenter {
+	   
+	    
+		    vertical-align:middle;
+	    
+		}
+		</style>
+    </head>
+	  <body>
+
+
+
+	    <!-- Carousel
+	    ================================================== -->
+   
+	    <!-- Marketing messaging and featurettes
+	    ================================================== -->
+	    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+	    <div class="container marketing">
+
+	<br/><br/><br/>
+	      <!-- Three columns of text below the carousel -->
+	      <div class="row vcenter" id="mainDiv">
+	        <div class="col-lg-4">
+	         <img class="img-circle" id="videoButton" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+	          <h2>Video</h2>
+	          <p>Record Video to express your opinion</p>
+	           </div><!-- /.col-lg-4 -->
+	        <div class="col-lg-4">
+	          <img class="img-circle" id="audioButton" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+	          <h2>Audio</h2>
+	          <p>Voice your opinion</p>
+	               </div><!-- /.col-lg-4 -->
+	        <div class="col-lg-4">
+	         <img class="img-circle" id="textButton" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140"></a>
+	          <h2>Type out your viewpoint</h2>
+	             </div><!-- /.col-lg-4 -->
+	      </div><!-- /.row -->
+
+
+
+     
+	      <!-- /END THE FEATURETTES -->
+
+
+	      <!-- FOOTER -->
+     
+
+	    </div><!-- /.container -->
+
+
+	    <!-- Bootstrap core JavaScript
+	    ================================================== -->
+			<script src="js/bootstrap.min.js" ></script>
+	    <!-- Placed at the end of the document so the pages load faster -->
+	    <script src="js/jquery-1.12.0.min.js"></script>
+		<script src="js/jquery.mobile-1.4.5.min.js"></script>
+		
+		
+	          <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+	    <script src="js/holder.min.js"></script>
+	    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	   <script type="text/javascript" src="js/dropbox.min.js"></script>
+	    <script type="text/javascript">
+		
+		 var DROPBOX_APP_KEY = 'erncdun0ed2flqz';
+	
+		var client = new Dropbox.Client({key: DROPBOX_APP_KEY,secret:'5gwll6ksc4dbx0k'});
+		client.authDriver(new Dropbox.AuthDriver.Cordova());
+	//
+	//	
+		client.authenticate({interactive:false}, auth_callback);
+		function auth_callback(){
+			//do nothing
+		}
+		function onDeviceReady() {
+			alert("Device ready");
+		    console.log(navigator.device.capture);
+			alert("Device ready");
+			
+		}
+		document.addEventListener("deviceready", onDeviceReady, false);
+		
+  
+	    $("#videoButton").click(function() {
+			navigator.device.capture.captureVideo(captureSuccess, captureError, {duration:300});
+			
+	  	  
+			
+	    });
+	
+	    $("#audioButton").click(function() {
+			navigator.device.capture.captureAudio(audioSuccess, audioError, {duration:300});
+	  	  
+	    });
+	
+	    $("#textButton").click(function() {
+	  	  alert("Hi Your first java script worked")
+	    });
+  
+		// capture callback
+		var audioSuccess = function(mediaFiles) {
+		    var i, path, len;
+		    for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+		        path = mediaFiles[i].fullPath;
+		        alert("Audio capture success")
+		    }
+		};
+
+		// capture error callback
+		var audioError = function(error) {
+		    navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+		};
+
+		// start audio capture
+		
+  
+  
+		// capture callback
+		var captureSuccess = function(mediaFiles) {
+		    var i, path, len;
+		    for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+                path = mediaFiles[i].fullPath;alert(path);
+				 client.writeFile("myVideo.mov", mediaFiles[i], function(error, stat) {
+					 if(error){
+						 alert("Error occured");
+						 showError(error);
+						 console.error(error);
+						 alert(error.status);
+					 }
+					 else
+					 {
+						 alert("write success");
+					 }
+				 });
+                console.log(path);// do something interesting with the file
+
+		        
+		    }
+		};
+
+		// capture error callback
+		var captureError = function(error) {
+		    navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+		};
+
+		// start video capture
+		
+		var showError = function(error) {
+		  switch (error.status) {
+		  case Dropbox.ApiError.INVALID_TOKEN:
+		    // If you're using dropbox.js, the only cause behind this error is that
+		    // the user token expired.
+		    // Get the user through the authentication flow again.
+			  alert("Dropbox.ApiError.INVALID_TOKEN");
+		    break;
+
+		  case Dropbox.ApiError.NOT_FOUND:
+		    // The file or folder you tried to access is not in the user's Dropbox.
+		    // Handling this error is specific to your application.
+			  alert("Dropbox.ApiError.NOT_FOUND");
+		    break;
+
+		  case Dropbox.ApiError.OVER_QUOTA:
+		    // The user is over their Dropbox quota.
+		    // Tell them their Dropbox is full. Refreshing the page won't help.
+			   alert("Dropbox.ApiError.OVER_QUOTA");
+		    break;
+
+		  case Dropbox.ApiError.RATE_LIMITED:
+		    // Too many API requests. Tell the user to try again later.
+		    // Long-term, optimize your code to use fewer API calls.
+			   alert("Dropbox.ApiError.RATE_LIMITED");
+		    break;
+
+		  case Dropbox.ApiError.NETWORK_ERROR:
+		    // An error occurred at the XMLHttpRequest layer.
+		    // Most likely, the user's network connection is down.
+		    // API calls will not succeed until the user gets back online.
+			  alert("Dropbox.ApiError.NETWORK_ERROR");
+		    break;
+
+		  case Dropbox.ApiError.INVALID_PARAM:
+		  case Dropbox.ApiError.OAUTH_ERROR:
+		  case Dropbox.ApiError.INVALID_METHOD:
+		  default:
+		    // Caused by a bug in dropbox.js, in your application, or in Dropbox.
+		    // Tell the user an error occurred, ask them to refresh the page.
+		  }
+		};
+		
+	    </script>
+	  
+  
+    
+      
+        <script type="text/javascript" src="js/index.js"></script>
+		 <script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="js/dropbox.min.js"></script>
+    </body>
+</html>
